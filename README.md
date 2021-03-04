@@ -6,16 +6,22 @@
 
 This is the source code of Agar.io, which is used in the paper "Discovering Diverse Multi-agent Strategic Behavior via Reward Randomization" [arxiv](arxiv link). The original repository can be found at [https://github.com/buoyancy99/PyAgar](https://github.com/buoyancy99/PyAgar).
 
-## User Guide
+## 1. Installation
+
+```
+pip install pillow gym pyglet
+```
+
+## 2. User Guide
 
 1. The environment is defined in `Env.py`. This implementation supports multi-agent tasks, so you can specify any number of players,  i.e. you are allowed to control multiple agents by passing a `[N, 3]` 2D array. The state space for each agent is `[mouse.x, mouse.y, Split/Feed/Non-operation]`. 
 2. The file `HumanControl.py` is for sample use.  You can just run `python HumanControl.py` to play with mouse and keyboard. Hope you enjoy this game:)
 
-## Citation
+## 3. Citation
 
 If you use Agar.io in your research, you can cite us with: TODO
 
-## License
+## 4. License
 
 Agar.io is released under the [MIT license](https://github.com/staghuntrpg/agar/blob/main/LICENSE).
 
