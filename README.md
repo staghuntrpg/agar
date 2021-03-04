@@ -1,6 +1,6 @@
 # Agar.io
 
-<p align="center"><img src="https://github.com/staghuntrpg/agar/main/gif/agar_demo.gif" align="middle" /></p>
+<p align="center"><img src="https://github.com/staghuntrpg/agar/blob/main/gif/agar_demo.gif" align="middle" /></p>
 
  [*Agar*](http://en.wikipedia.org/wiki/Agar.io) is a popular multi-player online game. Players control one or more cells in a Petri dish. The goal is to gain as much mass as possible by eating cells smaller than the player's cell while avoiding being eaten by larger ones. Larger cells move slower. Each player starts with one cell but can split a sufficiently large cell into two, allowing them to control multiple cells. The control is performed by mouse motion: all the cells of a player move towards the mouse position. We transform the Free-For-All (FFA) mode of Agar (https://agar.io/) into an Reinforcement Learning (RL) environment and we believe it can be utilized as a new Multi-agent RL testbed for a wide range of problems, such as cooperation, team formation, intention modeling, etc.
 
