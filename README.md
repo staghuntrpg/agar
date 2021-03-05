@@ -8,7 +8,7 @@ This is the source code of Agar.io, which is used in the paper "Discovering Dive
 
 ## 1. Installation
 
-Agar.io is easy to install,  see the following command.
+Agar.io is easy to install,  see the following command. If you encounter visualization problems with pyglet, we would suggest you to seek help from [official pyglet URL](https://github.com/pyglet/pyglet).
 
 ```
 pip install pillow gym pyglet
@@ -16,13 +16,13 @@ pip install pillow gym pyglet
 
 ## 2. User Guide
 
-1. The environment is defined in `Env.py`. This implementation supports multi-agent tasks, so you can specify any number of players (`--num_controlled_agent`),  i.e. you are allowed to control multiple agents by passing a `[N, 3]` 2D array. The state space for each agent is `[mouse.x, mouse.y, Split/Feed/Non-operation]`. 
+1. The Reinforcement Learning (RL) environment is defined in `Env.py`. This implementation supports multi-agent tasks, so you can specify any number of players (i.e. hyperparameter `num_controlled_agent`),  which means you are allowed to control multiple agents by passing a `[N, 3]` 2D array, where `N` is numbers of controlled agents, `3` is the dimension of action space. The action space for each agent can be described as `[mouse.x, mouse.y, Split/Feed/Non-operation]`, where `mouse.x, mouse.y` are continuous, while `Split/Feed/Non-operation` is discrete. There are two options for reward setting: `std` and `agg`, which correspond to the standard setting and aggressive setting of the paper. Note that this implementation only supports FFA mode (i.e. hyperparameter`gamemode=0`) 
 
 2. The game configuration is defined in `Config.py`, we would suggest you to keep the default parameters.
 
 ## 3. Enjoy
 
-We provide `HumanControl.py` for quick check and sample use.  You can use the following command to play with mouse and keyboard. There are 2 agents by default, you can change `num_agents` if you want.  Hope you enjoy this game:)
+We provide `HumanControl.py` for quick check and sample use.  You can use the following command to play with mouse and keyboard. There are 2 agents by default, and you can change `num_agents` to any number you want.  Hope you enjoy this game:)
 
 ```
 python HumanControl.py
