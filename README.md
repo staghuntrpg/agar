@@ -31,7 +31,7 @@ python HumanControl.py
 ## 4. Citation
 
 If you use Agar.io in your research, you can cite us with: 
-
+```
 @misc{tang2021discovering,
       title={Discovering Diverse Multi-Agent Strategic Behavior via Reward Randomization}, 
       author={Zhenggang Tang and Chao Yu and Boyuan Chen and Huazhe Xu and Xiaolong Wang and Fei Fang and Simon Du and Yu Wang and Yi Wu},
@@ -40,7 +40,7 @@ If you use Agar.io in your research, you can cite us with:
       archivePrefix={arXiv},
       primaryClass={cs.AI}
 }
-
+```
 ## 5. License
 
 Agar.io is released under the [MIT license](https://github.com/staghuntrpg/agar/blob/main/LICENSE).
