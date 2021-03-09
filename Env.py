@@ -1,28 +1,9 @@
-import gym
-from gym import spaces
-from .GameServer import GameServer
-from .players import Player, Bot
-import numpy as np
-from copy import deepcopy
-import random
+# Author: Boyuan Chen (Berkeley Artifical Intelligence Research)
+#         Zhenggang Tang (Peking University)
 
-def max(a, b):
-    if a>b:return a
-    return b
-
-def rand(a, b):
-    return random.random() * (b - a) + a
-    
-def onehot(d, ndim):
-    v = [0. for i in range(ndim)]
-    v[d] = 1.
-    return v
-
-
-class AgarEnv(gym.Env):
-    def __init__(self, args, gamemode = 0, alpha = 1, beta = 0, reward_settings = "std"):
-        
-        '''
+# The project is largely based on m-byte918's javascript implementation of the game with a lot of bug fixes and optimization for python
+# Original Ogar-Edited project https://github.com/m-byte918/MultiOgar-Edited
+'''    function __init__ 
         param:
             args:
                 args.eval: bool, when args.eval = True, script agent speed will be 1x and reward settings will be "original settings" (alpha = 1, beta = 0) otherwise a curriculum learning which changes script agent speed will be executed.                
@@ -34,16 +15,72 @@ class AgarEnv(gym.Env):
             gamemode:
                 FFA: gamemode = 0
                 Team: gamemode = 1 (not implemented yet)
-            alpha:
-                real, reward param alpha
-            beta:
-                real, reward param beta
             reward_settings:
-                str: two options, "std" means standard settings, "agg" means aggressive settings.    
-        '''
+                str: two options, "std" means standard settings, "agg" means aggressive settings.
+    
+    function step:
+
+        param:
+            actions:
+                actions = [x_0, y_0, split_0, x1, y1, split_1, ..., x_n-1, y_n-1, split_n-1], n = the number of agents controlled outside
+                x_i, y_i are real and belong to [0, 1]. They mean a point on the screen that all balls will move to
+                split_i is bool, means whether the agent will choose to split
+    
+        the action will be executed repeatedly for self.action_repeat steps (if split_i = True, agent_i will only split at the 1st step)
+
+        return: 
+            observations:
+                observations = {'t0': obs_0, 't1': obs_1, ..., 't_n-1': obs_n-1} details of obs_i can be seen at explanation of function parse_obs
+            rewards:
+                rewards = [reward_0, reward_1, ..., rewards_n-1] rewards_i is real.
+            dones:
+                dones = [done_0, done_1, ..., done_n-1] rewards_i is real.
+            infos:
+                infos = [info_0, info_1, ..., info_n-1]
+                info_i = {'high_masks':bool, 'bad_transition':bool}
+                when high_masks is False, the state at this step is meaningless(when a outside agent dies, it will still receive meaningless observations until all outside agents die or the episode ends)
+                when bad_transition is False, the state and the next state has no transition relationship
+
+    function reset:
+
+        no param
+
+        return: observations
+
+
+    function render
+
+        param:
+
+            playeridx: int, id of players to be rendered
+            mode: str, two options: rgb_array": render will return rgb_array, "human": render will only return whether window is still open.
+            name: str, the name of saved gif file
+'''
+
+import gym
+from gym import spaces
+from .GameServer import GameServer
+from .players import Player, Bot
+from . import rendering
+import numpy as np
+from copy import deepcopy
+import random
+
+def max(a, b):
+
+    if a>b:return a
+    return b
+
+def rand(a, b):
+
+    return random.random() * (b - a) + a
+
+
+class AgarEnv(gym.Env):
+    def __init__(self, args, gamemode = 0, reward_settings = "std"):
         super(AgarEnv, self).__init__()
-        self.alpha = alpha
-        self.beta = beta
+        self.alpha = args.r_alpha
+        self.beta = args.r_beta
         self.reward_settings = reward_settings
         self.args = args
         if args.total_step is None:args.total_step = 0
@@ -66,28 +103,7 @@ class AgarEnv(gym.Env):
         self.action_repeat = args.action_repeat
 
     def step(self, actions_):
-        '''
-        param:
-            actions:
-                actions = [x_0, y_0, split_0, x1, y1, split_1, ..., x_n-1, y_n-1, split_n-1], n = the number of agents controlled outside
-                x_i, y_i are real and belong to [0, 1]. They mean a point on the screen that all balls will move to
-                split_i is bool, means whether the agent will choose to split
-    
-            the action will be executed repeatedly for self.action_repeat steps (if split_i = True, agent_i will only split at the 1st step)
-
-        return: 
-            observations:
-                observations = {'t0': obs_0, 't1': obs_1, ..., 't_n-1': obs_n-1} details of obs_i can be seen at explanation of function parse_obs
-            rewards:
-                rewards = [reward_0, reward_1, ..., rewards_n-1] rewards_i is real.
-            dones:
-                dones = [done_0, done_1, ..., done_n-1] rewards_i is real.
-            infos:
-                infos = [info_0, info_1, ..., info_n-1]
-                info_i = {'high_masks':bool, 'bad_transition':bool}
-                when high_masks is False, the state at this step is meaningless(when a outside agent dies, it will still receive meaningless observations until all outside agents die or the episode ends)
-                when bad_transition is False, the state and the next state has no transition relationship
-        '''
+        
         actions = deepcopy(actions_)
         reward = np.zeros((self.num_agents, ))
         done = np.zeros((self.num_agents, ))
@@ -175,11 +191,7 @@ class AgarEnv(gym.Env):
         return observations, rewards
 
     def reset(self):
-        '''
-            no param
-    
-            return: observations
-        '''    
+        
         while 1:
             self.num_bots = 5
             self.num_players = self.num_bots +self.num_agents
@@ -228,10 +240,12 @@ class AgarEnv(gym.Env):
             if success:break
         return observations
 
-    def parse_obs(self, player, id, action = None):        
+    def parse_obs(self, player, id, action = None):
+        
         '''
-            function parse_obs will return obs_id
-            obs_id is a 578D array, first 560D is information of all entities around agent_id, last 28D is global information
+
+        function parse_obs will return obs_id
+        obs_id is a 578D array, first 560D is information of all entities around agent_id, last 28D is global information
 
         '''
         n = [10, 5, 5, 10, 10, 10, 5, 5, 10, 10] # the agent can observe at most 10 self-cells, 5 foods, 5 virus, 10 other script agent cells, 10 other outside agent cells
@@ -386,15 +400,7 @@ class AgarEnv(gym.Env):
         self.dir = deepcopy(a)
 
     def render(self, playeridx, mode = 'human', name = ""):
-        '''
-        param:
 
-            playeridx: int, id of players to be rendered
-            mode: str, two options: rgb_array": render will return rgb_array, "human": render will only return whether window is still open.
-            name: str, the name of saved gif file
-        '''
-        from . import rendering
-        
         if self.viewer is None:
             self.viewer = rendering.Viewer(self.server.config.serverViewBaseX, self.server.config.serverViewBaseY)
             self.render_border()
@@ -514,3 +520,7 @@ class AgarEnv(gym.Env):
                 self.viewer.close()
                 self.viewer = None
 
+def onehot(d, ndim):
+    v = [0. for i in range(ndim)]
+    v[d] = 1.
+    return v
