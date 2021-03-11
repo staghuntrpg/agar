@@ -3,59 +3,6 @@
 
 # The project is largely based on m-byte918's javascript implementation of the game with a lot of bug fixes and optimization for python
 # Original Ogar-Edited project https://github.com/m-byte918/MultiOgar-Edited
-'''    function __init__ 
-        param:
-            args:
-                args.eval: bool, when args.eval = True, script agent speed will be 1x and reward settings will be "original settings" (alpha = 1, beta = 0) otherwise a curriculum learning which changes script agent speed will be executed.                
-                args.total_step: number of training steps at the beginning, if it's set to None, it will be regarded as 0. 
-                args.num_processes: int, number of environments, only used to calculate total_steps
-                args.gamma: real, discount rate of RL, only used to calculate summation of rewards, can be set to None if rewards calculation is not necessary
-                args.action_repeat: int, times of action should be repeated
-                args.num_controlled_agent: int, number of agent controlled outside
-            gamemode:
-                FFA: gamemode = 0
-                Team: gamemode = 1 (not implemented yet)
-            reward_settings:
-                str: two options, "std" means standard settings, "agg" means aggressive settings.
-    
-    function step:
-
-        param:
-            actions:
-                actions = [x_0, y_0, split_0, x1, y1, split_1, ..., x_n-1, y_n-1, split_n-1], n = the number of agents controlled outside
-                x_i, y_i are real and belong to [0, 1]. They mean a point on the screen that all balls will move to
-                split_i is bool, means whether the agent will choose to split
-    
-        the action will be executed repeatedly for self.action_repeat steps (if split_i = True, agent_i will only split at the 1st step)
-
-        return: 
-            observations:
-                observations = {'t0': obs_0, 't1': obs_1, ..., 't_n-1': obs_n-1} details of obs_i can be seen at explanation of function parse_obs
-            rewards:
-                rewards = [reward_0, reward_1, ..., rewards_n-1] rewards_i is real.
-            dones:
-                dones = [done_0, done_1, ..., done_n-1] rewards_i is real.
-            infos:
-                infos = [info_0, info_1, ..., info_n-1]
-                info_i = {'high_masks':bool, 'bad_transition':bool}
-                when high_masks is False, the state at this step is meaningless(when a outside agent dies, it will still receive meaningless observations until all outside agents die or the episode ends)
-                when bad_transition is False, the state and the next state has no transition relationship
-
-    function reset:
-
-        no param
-
-        return: observations
-
-
-    function render
-
-        param:
-
-            playeridx: int, id of players to be rendered
-            mode: str, two options: rgb_array": render will return rgb_array, "human": render will only return whether window is still open.
-            name: str, the name of saved gif file
-'''
 
 import gym
 from gym import spaces
@@ -77,6 +24,22 @@ def rand(a, b):
 
 
 class AgarEnv(gym.Env):
+    '''
+    function __init__ 
+        param:
+            args:
+                args.eval: bool, when args.eval = True, script agent speed will be 1x and reward settings will be "original settings" (alpha = 1, beta = 0) otherwise a curriculum learning which changes script agent speed will be executed.                
+                args.total_step: number of training steps at the beginning, if it's set to None, it will be regarded as 0. 
+                args.num_processes: int, number of environments, only used to calculate total_steps
+                args.gamma: real, discount rate of RL, only used to calculate summation of rewards, can be set to None if rewards calculation is not necessary
+                args.action_repeat: int, times of action should be repeated
+                args.num_controlled_agent: int, number of agent controlled outside
+            gamemode:
+                FFA: gamemode = 0
+                Team: gamemode = 1 (not implemented yet)
+            reward_settings:
+                str: two options, "std" means standard settings, "agg" means aggressive settings.
+    '''
     def __init__(self, args, gamemode = 0, reward_settings = "std"):
         super(AgarEnv, self).__init__()
         self.alpha = args.r_alpha
@@ -101,7 +64,30 @@ class AgarEnv(gym.Env):
         self.dir = []
         # factors for reward
         self.action_repeat = args.action_repeat
+    '''
+    function step:
 
+        param:
+            actions:
+                actions = [x_0, y_0, split_0, x1, y1, split_1, ..., x_n-1, y_n-1, split_n-1], n = the number of agents controlled outside
+                x_i, y_i are real and belong to [0, 1]. They mean a point on the screen that all balls will move to
+                split_i is bool, means whether the agent will choose to split
+    
+        the action will be executed repeatedly for self.action_repeat steps (if split_i = True, agent_i will only split at the 1st step)
+
+        return: 
+            observations:
+                observations = {'t0': obs_0, 't1': obs_1, ..., 't_n-1': obs_n-1} details of obs_i can be seen at explanation of function parse_obs
+            rewards:
+                rewards = [reward_0, reward_1, ..., rewards_n-1] rewards_i is real.
+            dones:
+                dones = [done_0, done_1, ..., done_n-1] rewards_i is real.
+            infos:
+                infos = [info_0, info_1, ..., info_n-1]
+                info_i = {'high_masks':bool, 'bad_transition':bool}
+                when high_masks is False, the state at this step is meaningless(when a outside agent dies, it will still receive meaningless observations until all outside agents die or the episode ends)
+                when bad_transition is False, the state and the next state has no transition relationship
+    '''
     def step(self, actions_):
         
         actions = deepcopy(actions_)
@@ -190,6 +176,13 @@ class AgarEnv(gym.Env):
         observations = {'t'+str(i): observations[i] for i in range(self.num_agents)}
         return observations, rewards
 
+    '''
+    function reset:
+
+        no param
+
+        return: observations
+    '''
     def reset(self):
         
         while 1:
@@ -399,6 +392,15 @@ class AgarEnv(gym.Env):
 
         self.dir = deepcopy(a)
 
+    '''    
+    function render
+
+        param:
+
+            playeridx: int, id of players to be rendered
+            mode: str, two options: rgb_array": render will return rgb_array, "human": render will only return whether window is still open.
+            name: str, the name of saved gif file
+    '''
     def render(self, playeridx, mode = 'human', name = ""):
 
         if self.viewer is None:
