@@ -4,7 +4,7 @@
 
  [*Agar*](http://en.wikipedia.org/wiki/Agar.io) is a popular multi-player online game. Players control one or more cells in a Petri dish. The goal is to gain as much mass as possible by eating cells smaller than the player's cell while avoiding being eaten by larger ones. Larger cells move slower. Each player starts with one cell but can split a sufficiently large cell into two, allowing them to control multiple cells. The control is performed by mouse motion: all the cells of a player move towards the mouse position. We transform the Free-For-All (FFA) mode of Agar (https://agar.io/) into an Reinforcement Learning (RL) environment and we believe it can be utilized as a new Multi-agent RL testbed for a wide range of problems, such as cooperation, team formation, intention modeling, etc.
 
-This is the source code of Agar.io, which is used in the paper "Discovering Diverse Multi-agent Strategic Behavior via Reward Randomization" [arxiv](arxiv link). This repository is developed from the original environment code [(https://github.com/buoyancy99/PyAgar)](https://github.com/buoyancy99/PyAgar), but has been slightly modified to fit the algorithms used in [RPG (Reward-Randomized Policy Gradient)](https://github.com/staghuntrpg/RPG).
+This is the source code of Agar.io, which is used in the paper "Discovering Diverse Multi-agent Strategic Behavior via Reward Randomization" [https://arxiv.org/abs/2103.04564](https://arxiv.org/abs/2103.04564). This repository is developed from the original environment code [(https://github.com/buoyancy99/PyAgar)](https://github.com/buoyancy99/PyAgar), but has been slightly modified to fit the algorithms used in [RPG (Reward-Randomized Policy Gradient)](https://github.com/staghuntrpg/RPG).
 
 ## 1. Installation
 
@@ -30,8 +30,17 @@ python HumanControl.py
 
 ## 4. Citation
 
-If you use Agar.io in your research, you can cite us with: TODO
-
+If you use Agar.io in your research, you can cite us with: 
+```
+@misc{tang2021discovering,
+      title={Discovering Diverse Multi-Agent Strategic Behavior via Reward Randomization}, 
+      author={Zhenggang Tang and Chao Yu and Boyuan Chen and Huazhe Xu and Xiaolong Wang and Fei Fang and Simon Du and Yu Wang and Yi Wu},
+      year={2021},
+      eprint={2103.04564},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI}
+}
+```
 ## 5. License
 
 Agar.io is released under the [MIT license](https://github.com/staghuntrpg/agar/blob/main/LICENSE).
