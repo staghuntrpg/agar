@@ -14,6 +14,12 @@ Agar.io is easy to install,  see the following command. If you encounter visuali
 pip install pillow gym pyglet
 ```
 
+We also use baselines from openai, but we changed it a little, so you should install it by running
+
+'''
+pip baselines/setup.py install
+'''
+
 ## 2. User Guide
 
 1. The Reinforcement Learning (RL) environment is defined in `Env.py`. This implementation supports multi-agent tasks, so you can specify any number of players (i.e. hyperparameter `num_controlled_agent`),  which means you are allowed to control multiple agents by passing a `[N, 3]` 2D array, where `N` is numbers of controlled agents, `3` is the dimension of action space. The action space for each agent can be described as `[mouse.x, mouse.y, Split/Feed/Non-operation]`, where `mouse.x, mouse.y` are continuous, while `Split/Feed/Non-operation` is discrete. There are two options for reward setting: `std` and `agg`, which correspond to the standard setting and aggressive setting of the paper. Note that this implementation only supports FFA mode (i.e. hyperparameter`gamemode=0`) 
