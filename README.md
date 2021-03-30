@@ -16,9 +16,9 @@ pip install pillow gym pyglet
 
 We also use baselines from openai, but we changed it a little, so you should install it by running
 
-'''
+```
 pip baselines/setup.py install
-'''
+```
 
 ## 2. User Guide
 
